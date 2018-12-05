@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.XR;
 
 [System.Serializable]
 public class Portals
@@ -19,6 +20,7 @@ public class PortalHandler : MonoBehaviour {
     public List<Portals> PortalList = new List<Portals>();
     public float AppearDistance = 0.05f;
 
+    public GameObject MoveTarget;
     public bool DebugController = false;
 
     public float Speed = 1; 
@@ -85,14 +87,14 @@ public class PortalHandler : MonoBehaviour {
         posoff.y = 0;
         posoff.z = 0;
 
-
-        transform.position = new Vector3( tr.position.x, transform.position.y, tr.position.z) ;
+     
+        MoveTarget.transform.position = new Vector3( tr.position.x, XRDevice.isPresent ? 0 : transform.position.y, tr.position.z) ;
 
         //transform.localEulerAngles = PortalList[value].TargetPortalObject.transform.localEulerAngles;
-        transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
+        MoveTarget.transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
 
-        transform.position += -transform.forward * AppearDistance;
-        transform.position += tr.TransformDirection( posoff);
+        MoveTarget.transform.position += -transform.forward * AppearDistance;
+        MoveTarget. transform.position += tr.TransformDirection( posoff);
         PortalList[value].CloseThisDoor.ResetRot();
 
         
@@ -123,8 +125,11 @@ public class PortalHandler : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.A))
         {
-            //velocity += Vector3.left;
-            transform.localEulerAngles += Vector3.down * Time.deltaTime * RotSpeed;
+            velocity += Vector3.left;            
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            MoveTarget.transform.localEulerAngles += Vector3.down * Time.deltaTime * RotSpeed;
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -132,11 +137,17 @@ public class PortalHandler : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.D))
         {
-            //  velocity += Vector3.right;
-            transform.localEulerAngles += Vector3.up * Time.deltaTime * RotSpeed;
+            velocity += Vector3.right;            
         }
+        if (Input.GetKey(KeyCode.E))
+        {
+            MoveTarget.transform.localEulerAngles += Vector3.up * Time.deltaTime * RotSpeed;
+        }       
 
-        transform.position += transform.TransformDirection(velocity) * Time.deltaTime * Speed;
+        Vector3 TargetPos = transform.TransformDirection(velocity) * Time.deltaTime * Speed; ;
+        TargetPos.y = 0;
+
+        MoveTarget.transform.position += TargetPos;
     }
 
 }

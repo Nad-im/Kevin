@@ -14,6 +14,8 @@ public class Door : MonoBehaviour {
 
     private float CurrrentRot = 0;
 
+    private bool Sent = false;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -36,19 +38,15 @@ public class Door : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        SetVisible(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!Sent)
         {
-            PlayerDetected = true;
-            
-            foreach (Renderer rend in GetComponentsInChildren<MeshRenderer>(true))
-            {
-                rend.enabled = true;
-            }
-            foreach (Collider col in GetComponentsInChildren<Collider>(true))
-            {
-                col.enabled = true;
-            }
-            
+            SetVisible(other);
+            Sent = true;
         }
     }
 
@@ -61,6 +59,25 @@ public class Door : MonoBehaviour {
             {               
                 Open();
             }
+            Sent = false;
+        }
+    }
+
+    private void SetVisible(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            PlayerDetected = true;
+
+            foreach (Renderer rend in GetComponentsInChildren<MeshRenderer>(true))
+            {
+                rend.enabled = true;
+            }
+            foreach (Collider col in GetComponentsInChildren<Collider>(true))
+            {
+                col.enabled = true;
+            }
+
         }
     }
 
