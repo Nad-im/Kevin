@@ -87,8 +87,13 @@ public class PortalHandler : MonoBehaviour {
         posoff.y = 0;
         posoff.z = 0;
 
-     
-        MoveTarget.transform.position = new Vector3( tr.position.x, XRDevice.isPresent ? 0 : transform.position.y, tr.position.z) ;
+        if (XRDevice.isPresent) {
+            MoveTarget.transform.position = new Vector3(tr.position.x,  0 , tr.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(tr.position.x, transform.position.y, tr.position.z);
+        }
 
         //transform.localEulerAngles = PortalList[value].TargetPortalObject.transform.localEulerAngles;
         MoveTarget.transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
