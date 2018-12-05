@@ -89,17 +89,24 @@ public class PortalHandler : MonoBehaviour {
 
         if (XRDevice.isPresent) {
             MoveTarget.transform.position = new Vector3(tr.position.x,  0 , tr.position.z);
+
+            MoveTarget.transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
+
+            MoveTarget.transform.position += -transform.forward * AppearDistance;
+            MoveTarget.transform.position += tr.TransformDirection(posoff);
         }
         else
         {
             transform.position = new Vector3(tr.position.x, transform.position.y, tr.position.z);
+
+            transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
+
+            transform.position += -transform.forward * AppearDistance;
+            transform.position += tr.TransformDirection(posoff);
         }
 
-        //transform.localEulerAngles = PortalList[value].TargetPortalObject.transform.localEulerAngles;
-        MoveTarget.transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
-
-        MoveTarget.transform.position += -transform.forward * AppearDistance;
-        MoveTarget. transform.position += tr.TransformDirection( posoff);
+        
+       
         PortalList[value].CloseThisDoor.ResetRot();
 
         
@@ -134,7 +141,14 @@ public class PortalHandler : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.Q))
         {
-            MoveTarget.transform.localEulerAngles += Vector3.down * Time.deltaTime * RotSpeed;
+            if (XRDevice.isPresent)
+            {
+                MoveTarget.transform.localEulerAngles += Vector3.down * Time.deltaTime * RotSpeed;
+            }
+            else
+            {
+                transform.localEulerAngles += Vector3.down * Time.deltaTime * RotSpeed;
+            }
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -146,7 +160,14 @@ public class PortalHandler : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.E))
         {
-            MoveTarget.transform.localEulerAngles += Vector3.up * Time.deltaTime * RotSpeed;
+            if (XRDevice.isPresent)
+            {
+                MoveTarget.transform.localEulerAngles += Vector3.up * Time.deltaTime * RotSpeed;
+            }
+            else
+            {
+                transform.localEulerAngles += Vector3.up * Time.deltaTime * RotSpeed;
+            }
         }       
 
         Vector3 TargetPos = transform.TransformDirection(velocity) * Time.deltaTime * Speed; ;
