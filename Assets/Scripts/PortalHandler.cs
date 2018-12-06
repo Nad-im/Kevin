@@ -87,22 +87,32 @@ public class PortalHandler : MonoBehaviour {
         posoff.y = 0;
         posoff.z = 0;
 
+        var headCagePos = MoveTarget.transform.InverseTransformPoint(transform.position);
+        var footCagePos = new Vector3(headCagePos.x, 0, headCagePos.z);
+        var footWorldPos = MoveTarget.transform.TransformPoint(footCagePos);
+
+        Vector3 TargetPoint = new Vector3(tr.position.x, 0, tr.position.z);
+        TargetPoint += -transform.forward * AppearDistance;
+        TargetPoint += tr.TransformDirection(posoff);
+
+        MoveTarget.transform.position += TargetPoint - footWorldPos;
+
         if (XRDevice.isPresent) {
-            MoveTarget.transform.position = new Vector3(tr.position.x,  0 , tr.position.z);
+            //MoveTarget.transform.position = new Vector3(tr.position.x,  0 , tr.position.z);
 
             MoveTarget.transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
 
-            MoveTarget.transform.position += -transform.forward * AppearDistance;
-            MoveTarget.transform.position += tr.TransformDirection(posoff);
+            //MoveTarget.transform.position += -transform.forward * AppearDistance;
+            //MoveTarget.transform.position += tr.TransformDirection(posoff);
         }
         else
         {
-            transform.position = new Vector3(tr.position.x, transform.position.y, tr.position.z);
+            //transform.position = new Vector3(tr.position.x, transform.position.y, tr.position.z);
 
             transform.localEulerAngles -= PortalList[value].TargetPortalObject.transform.localEulerAngles - PortalList[value].PortalObject.transform.localEulerAngles;
-
-            transform.position += -transform.forward * AppearDistance;
-            transform.position += tr.TransformDirection(posoff);
+            transform.localPosition = new Vector3(transform.localPosition.x, 1.7f, transform.localPosition.z);
+            //transform.position += -transform.forward * AppearDistance;
+            //transform.position += tr.TransformDirection(posoff);
         }
 
         

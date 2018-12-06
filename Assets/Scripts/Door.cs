@@ -33,7 +33,27 @@ public class Door : MonoBehaviour {
 
     private void Open()
     {
-        Opened = !Opened;       
+        Opened = !Opened;
+        if (Opened)
+        {
+            foreach (Collider col in GetComponentsInChildren<Collider>(true))
+            {
+                if (col.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+                {
+                    col.enabled = false;
+                }
+            }
+        }
+        else
+        {
+            foreach (Collider col in GetComponentsInChildren<Collider>(true))
+            {
+                if (col.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+                {
+                    col.enabled = true;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
